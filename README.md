@@ -1,5 +1,7 @@
 # microservices
 
+![alt_text](https://github.com/dkarthus/microservices/blob/83788aadbb1e030f77ce60b8f454891f94262764/servs2.png)
+
 Summary: This is a System Administration and Networking project.
 
 Introduction
@@ -50,3 +52,6 @@ Make sure that each redirection toward a service is done using a load balancer. 
 Grafana, Wordpress, PhpMyAdmin and nginx’s kind must be "LoadBalancer". Influxdb
 and MySQL’s kind must be "ClusterIP". Other entries can be present, but none of them
 can be of kind "NodePort".
+
+
+![alt_text](https://github.com/dkarthus/microservices/blob/83788aadbb1e030f77ce60b8f454891f94262764/servs.png)
