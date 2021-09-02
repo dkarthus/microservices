@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ftps
+  annotations:
+    metallb.universe.tf/allow-shared-ip: ft_services
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 192.168.49.5
+  selector:
+    app: ftps
+  ports:
+    - name: active
+      port: 21
+      targetPort: 21
+      protocol: TCP
+    - name: passive-min
+      protocol: TCP
+      port: 30001
+      targetPort: 30001
+    - name: passive-max
+      protocol: TCP
+      port: 30002
+      targetPort: 30002
+    - name: datatransfer
+      protocol: TCP
+      port: 20
+      targetPort: 20
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ftps
+spec:
+  selector:
+    matchLabels:
+      app: ftps
+  template:
+    metadata:
+      labels:
+        app: ftps
+    spec:
+      volumes:
+        - name: ftp-pv
+          persistentVolumeClaim:
+            claimName: pvc1
+      containers:
+        - name: ftps
+          image: ftps
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 21
+            - containerPort: 20
+            - containerPort: 30001
+            - containerPort: 30002
+          volumeMounts:
+            - mountPath: "/root"
+              name: ftp-pv
+          livenessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            tcpSocket:
+              port: 21
